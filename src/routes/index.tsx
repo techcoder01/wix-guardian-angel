@@ -5,6 +5,7 @@ import { scanUrl } from "@/utils/scanner.functions";
 import type { ScanResult, Severity, Finding } from "@/lib/scanner-types";
 import { FindingCard } from "@/components/FindingCard";
 import { SeverityBadge } from "@/components/SeverityBadge";
+import { ScanSummary } from "@/components/ScanSummary";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -218,6 +219,7 @@ function ResultPanel({
 
   return (
     <section className="space-y-5">
+      <ScanSummary result={r} />
       <div className="rounded-lg border border-border bg-card p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
