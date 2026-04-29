@@ -29,14 +29,24 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "WixSecAudit — Passive Security Auditor for Low-Code Sites" },
+      {
+        name: "description",
+        content:
+          "Black-box passive security scanner for Wix and other low-code websites. Audits headers, cookies, transport, content and third-party scripts with severity, remediation and fix-owner labelling.",
+      },
+      { name: "author", content: "WixSecAudit" },
+      {
+        property: "og:title",
+        content: "WixSecAudit — Passive Security Auditor for Low-Code Sites",
+      },
+      {
+        property: "og:description",
+        content:
+          "Passive black-box security scanner for Wix and low-code websites. Dissertation prototype.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {

@@ -38,36 +38,59 @@ export function ScanSummary({ result }: { result: ScanResult }) {
   const top = topImpact(result.findings);
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5 space-y-5">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">One-page summary</p>
-          <h3 className="text-lg font-semibold">
-            {total} finding{total === 1 ? "" : "s"} across {result.finalUrl.replace(/^https?:\/\//, "").slice(0, 48)}
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-5 space-y-4 sm:space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            One-page summary
+          </p>
+          <h3 className="text-base sm:text-lg font-semibold leading-tight break-words">
+            {total} finding{total === 1 ? "" : "s"} across{" "}
+            <span className="font-mono text-sm sm:text-base">
+              {result.finalUrl.replace(/^https?:\/\//, "").slice(0, 64)}
+            </span>
           </h3>
         </div>
-        <span className="text-xs text-muted-foreground hidden sm:inline">
+        <span className="text-xs text-muted-foreground shrink-0">
           {new Date(result.scannedAt).toLocaleString()}
         </span>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
         <div>
-          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">By severity</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+            By severity
+          </p>
           <div className="space-y-1.5">
             {SEVERITY_ORDER.map((sev) => {
               const n = result.summary[sev];
               const pct = total > 0 ? (n / total) * 100 : 0;
               return (
                 <div key={sev} className="flex items-center gap-2 text-xs">
-                  <span className="w-16 uppercase tracking-wider text-muted-foreground">{sev}</span>
+                  <span
+                    className="w-14 sm:w-16 uppercase tracking-wider font-semibold"
+                    style={{
+                      color: n > 0 ? `oklch(${SEV_VAR[sev]})` : undefined,
+                    }}
+                  >
+                    {sev}
+                  </span>
                   <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                     <div
-                      className="h-full rounded-full"
-                      style={{ width: `${pct}%`, backgroundColor: `oklch(${SEV_VAR[sev]})` }}
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${pct}%`,
+                        backgroundColor: `oklch(${SEV_VAR[sev]})`,
+                        boxShadow:
+                          pct > 0
+                            ? `0 0 8px oklch(${SEV_VAR[sev]} / 0.45)`
+                            : undefined,
+                      }}
                     />
                   </div>
-                  <span className="w-6 text-right tabular-nums font-semibold">{n}</span>
+                  <span className="w-6 text-right tabular-nums font-semibold">
+                    {n}
+                  </span>
                 </div>
               );
             })}
@@ -75,15 +98,19 @@ export function ScanSummary({ result }: { result: ScanResult }) {
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">By fix owner</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+            By fix owner
+          </p>
           <div className="grid grid-cols-2 gap-2">
             {ownerCounts.map(({ owner, count }) => (
               <div
                 key={owner}
-                className="rounded-md border border-border bg-background/40 px-3 py-2"
+                className="rounded-md border border-border bg-background/40 px-2.5 sm:px-3 py-2"
               >
-                <div className="text-xl font-bold tabular-nums">{count}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                <div className="text-lg sm:text-xl font-bold tabular-nums">
+                  {count}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground leading-tight">
                   {OWNER_LABEL[owner]}
                 </div>
               </div>
@@ -97,7 +124,9 @@ export function ScanSummary({ result }: { result: ScanResult }) {
           Top 3 highest-impact issues
         </p>
         {top.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No findings — nothing to prioritise.</p>
+          <p className="text-sm text-muted-foreground">
+            No findings — nothing to prioritise.
+          </p>
         ) : (
           <ol className="space-y-2">
             {top.map((f, i) => (
@@ -123,15 +152,17 @@ export function ScanSummary({ result }: { result: ScanResult }) {
                       {OWNER_LABEL[f.fixOwner]}
                     </span>
                   </div>
-                  <p className="text-sm font-medium truncate">{f.title}</p>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{f.remediation}</p>
+                  <p className="text-sm font-medium break-words">{f.title}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2">
+                    {f.remediationDetail?.summary ?? f.remediation}
+                  </p>
                 </div>
                 {f.reference && (
                   <a
                     href={f.reference}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-primary hover:underline whitespace-nowrap mt-0.5"
+                    className="text-xs text-primary hover:underline whitespace-nowrap mt-0.5 hidden sm:inline"
                   >
                     Fix ↗
                   </a>
