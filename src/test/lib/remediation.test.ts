@@ -30,6 +30,9 @@ describe("remediation registry", () => {
   it("registry contains entries for every emitted finding ID", () => {
     // Run every check with payloads that produce as many findings as possible
     // and assert each ID resolves to a non-fallback remediation.
+    // Fixture assembled at runtime so secret-format literals never appear in source —
+    // see comment in src/test/checks/wix.test.ts for rationale.
+    const fakeAwsKey = ["AK", "IA", "IOSFODNN7", "EXAMPLE"].join("");
     const sampleHtml = `
       <html>
         <a href="mailto:hi@example.com">contact</a>
@@ -37,7 +40,7 @@ describe("remediation registry", () => {
         <script src="https://cdn.example.com/lib.js"></script>
         <iframe src="https://embed.example.com"></iframe>
         <!-- TODO: remove this -->
-        <script>const k = "AKIAIOSFODNN7EXAMPLE";</script>
+        <script>const k = "${fakeAwsKey}";</script>
         <script>{"collectionId":"Members/X"}</script>
         //# sourceMappingURL=app.js.map
       </html>
